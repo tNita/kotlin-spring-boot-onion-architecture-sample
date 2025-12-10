@@ -10,27 +10,14 @@
 - データベース: PostgreSQL
 
 ## アーキテクチャ概要
-- ソフトウェアアーキテクチャ: オニオンアーキテクチャ
-    - プレゼンテーション層（入出力 / API）
-    - アプリケーション層（ユースケース）
-    - ドメイン層（ドメインモデル・ドメインサービス）
-    - インフラ層（DB など外部リソース）
 
-```mermaid
-graph TD
+[architecture.md](docs/architecture.md)に記載
 
-    Presentation["プレゼンテーション層"]
-    Application["アプリケーション層"]
-    Domain["ドメイン層"]
-    Infrastructure["インフラ層"]
+## コーディングルール
+[coding-rule.md](docs/coding-rule.md)に記載
 
-    Presentation --> Application
-    Application --> Domain
-    Infrastructure --> Domain
-    Infrastructure --> Application
-```
-
-## 設計方針
-- ドメイン駆動設計（DDD）を採用
-- ドメインモデルは [`docs/domain-modeling.drawio.svg`](docs/domain-modeling.drawio.svg) を基準とする
-- ドメイン層は戦術的 DDD パターン（値オブジェクト / エンティティ / リポジトリ / ドメインサービス）で実装する
+## 起動・テスト方法
+- 前提: JDK 21、Docker (PostgreSQL を起動する場合)
+- テスト: `./gradlew test`
+- DB 起動: `docker compose up -d postgres`
+- アプリ起動: `./gradlew bootRun`（DB が起動していること）
