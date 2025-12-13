@@ -1,5 +1,6 @@
 package com.example.bookmanager.domain
 
+import com.example.bookmanager.domain.query.AuthorQueryRepository
 import org.springframework.stereotype.Component
 
 /**
@@ -7,18 +8,18 @@ import org.springframework.stereotype.Component
  */
 @Component
 class AuthorDomainService(
-    private val authorRepository: AuthorRepository
+    private val authorQueryRepository: AuthorQueryRepository
 ) {
 
     fun ensureNotDuplicated(name: AuthorName, birthDate: BirthDate) {
-        val alreadyExists = authorRepository.findByName(name).any { it.birthDate == birthDate }
+        val alreadyExists = authorQueryRepository.findByName(name).any { it.birthDate == birthDate.value }
         if (alreadyExists) {
             throw DomainException(DomainErrorCode.AUTHOR_DUPLICATE, "Author already registered")
         }
     }
 
     fun ensureAllExist(authorIds: Collection<AuthorId>) {
-        val missing = authorIds.filter { authorRepository.findById(it) == null }
+        val missing = authorIds.filter { authorQueryRepository.findById(it) == null }
         if (missing.isNotEmpty()) {
             val joinedIds = missing.joinToString(",") { it.value.toString() }
             throw DomainException(DomainErrorCode.AUTHOR_NOT_FOUND, "Author not found: $joinedIds")

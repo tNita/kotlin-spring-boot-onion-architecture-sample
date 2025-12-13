@@ -4,7 +4,7 @@ import com.example.bookmanager.domain.AuthorDomainService
 import com.example.bookmanager.domain.AuthorId
 import com.example.bookmanager.domain.Book
 import com.example.bookmanager.domain.BookId
-import com.example.bookmanager.domain.BookRepository
+import com.example.bookmanager.domain.BookCommandRepository
 import com.example.bookmanager.domain.Price
 import com.example.bookmanager.domain.PublishStatus
 import com.example.bookmanager.domain.Title
@@ -18,7 +18,7 @@ import java.math.BigDecimal
  */
 @Component
 class UpdateBookUseCase(
-    private val bookRepository: BookRepository,
+    private val bookCommandRepository: BookCommandRepository,
     private val authorDomainService: AuthorDomainService
 ) {
 
@@ -28,15 +28,15 @@ class UpdateBookUseCase(
     fun exec(command: Command): BookOutput {
         return runUseCase {
             val bookId = BookId.of(command.bookId)
-            val existing = bookRepository.findById(bookId)
+            val existing = bookCommandRepository.findById(bookId)
                 ?: throw ApplicationException(
                     ApplicationErrorCode.BOOK_NOT_FOUND,
                     "Book not found: ${bookId.value}"
                 )
 
             val updated = applyUpdates(existing, command)
-            val saved = bookRepository.save(updated)
-            BookOutput(saved)
+            val saved = bookCommandRepository.save(updated)
+            saved.toOutput()
         }
     }
 

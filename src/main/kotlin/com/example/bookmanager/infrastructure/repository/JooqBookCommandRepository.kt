@@ -1,9 +1,8 @@
 package com.example.bookmanager.infrastructure.repository
 
-import com.example.bookmanager.domain.AuthorId
 import com.example.bookmanager.domain.Book
 import com.example.bookmanager.domain.BookId
-import com.example.bookmanager.domain.BookRepository
+import com.example.bookmanager.domain.BookCommandRepository
 import com.example.bookmanager.domain.Id
 import com.example.bookmanager.domain.Price
 import com.example.bookmanager.domain.PublishStatus
@@ -19,9 +18,9 @@ import java.util.UUID
 
 @Repository
 @Primary
-class JooqBookRepository(
+class JooqBookCommandRepository(
     private val dsl: DSLContext,
-) : BookRepository {
+) : BookCommandRepository {
     override fun save(book: Book): Book {
         return dsl.transactionResult { config ->
             val tx = config.dsl()
@@ -44,35 +43,6 @@ class JooqBookRepository(
             .toSet()
 
         return record.toDomain(authorIds)
-    }
-
-    override fun findByAuthorId(authorId: AuthorId): List<Book> {
-        val bookIds = dsl.select(BOOK_AUTHORS.BOOK_ID)
-            .from(BOOK_AUTHORS)
-            .where(BOOK_AUTHORS.AUTHOR_ID.eq(authorId.value))
-            .fetchInto(Long::class.java)
-            .toSet()
-
-        if (bookIds.isEmpty()) return emptyList()
-
-        val bookRecords = dsl.selectFrom(BOOKS)
-            .where(BOOKS.ID.`in`(bookIds))
-            .fetch()
-            .associateBy { it.id!! }
-
-        val authorMap: Map<Long, Set<Id>> = dsl.select(BOOK_AUTHORS.BOOK_ID, BOOK_AUTHORS.AUTHOR_ID)
-            .from(BOOK_AUTHORS)
-            .where(BOOK_AUTHORS.BOOK_ID.`in`(bookIds))
-            .fetchGroups(
-                BOOK_AUTHORS.BOOK_ID,
-                BOOK_AUTHORS.AUTHOR_ID,
-            )
-            .mapValues { entry -> entry.value.map { uuid -> Id.generate { uuid } }.toSet() }
-
-        return bookRecords.map { (bookId, record) ->
-            val authors = authorMap[bookId] ?: emptySet()
-            record.toDomain(authors)
-        }
     }
 
     private fun upsertBook(tx: DSLContext, book: Book): BookId =

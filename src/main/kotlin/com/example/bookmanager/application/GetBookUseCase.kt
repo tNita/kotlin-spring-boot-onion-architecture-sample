@@ -1,12 +1,12 @@
 package com.example.bookmanager.application
 
 import com.example.bookmanager.domain.BookId
-import com.example.bookmanager.domain.BookRepository
+import com.example.bookmanager.domain.query.BookQueryRepository
 import org.springframework.stereotype.Component
 
 @Component
 class GetBookUseCase(
-    private val bookRepository: BookRepository,
+    private val bookQueryRepository: BookQueryRepository,
 ) {
 
     /**
@@ -14,11 +14,11 @@ class GetBookUseCase(
      */
     fun exec(bookId: Long): BookOutput = runUseCase {
         val id = BookId.of(bookId)
-        val book = bookRepository.findById(id)
+        val book = bookQueryRepository.findById(id)
             ?: throw ApplicationException(
                 ApplicationErrorCode.BOOK_NOT_FOUND,
                 "指定された書籍が見つかりません (id=$bookId)"
             )
-        BookOutput(book)
+        book.toOutput()
     }
 }

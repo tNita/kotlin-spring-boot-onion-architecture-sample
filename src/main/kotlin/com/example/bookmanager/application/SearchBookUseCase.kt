@@ -1,14 +1,15 @@
 package com.example.bookmanager.application
 
 import com.example.bookmanager.domain.AuthorName
-import com.example.bookmanager.domain.AuthorRepository
-import com.example.bookmanager.domain.BookRepository
+import com.example.bookmanager.domain.Id
+import com.example.bookmanager.domain.query.AuthorQueryRepository
+import com.example.bookmanager.domain.query.BookQueryRepository
 import org.springframework.stereotype.Component
 
 @Component
 class SearchBookUseCase(
-    private val authorRepository: AuthorRepository,
-    private val bookRepository: BookRepository
+    private val authorQueryRepository: AuthorQueryRepository,
+    private val bookQueryRepository: BookQueryRepository
 ) {
 
     /**
@@ -17,11 +18,11 @@ class SearchBookUseCase(
     fun exec(authorName: String): List<BookOutput> {
         return runUseCase {
             val name = AuthorName.of(authorName)
-            val authors = authorRepository.findByName(name)
-            authors
-                .flatMap { author -> bookRepository.findByAuthorId(author.id) }
+            val authors = authorQueryRepository.findByName(name)
+            val authorIds = authors.map { author -> Id.generate { author.id } }
+            bookQueryRepository.findByAuthorIds(authorIds)
                 .distinctBy { it.id }
-                .map { book -> BookOutput(book) }
+                .map { book -> book.toOutput() }
         }
     }
 }

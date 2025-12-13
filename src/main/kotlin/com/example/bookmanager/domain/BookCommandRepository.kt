@@ -1,7 +1,6 @@
 package com.example.bookmanager.domain
 
-interface BookRepository {
+interface BookCommandRepository {
     fun save(book: Book): Book
     fun findById(id: BookId): Book?
-    fun findByAuthorId(authorId: AuthorId): List<Book>
 }

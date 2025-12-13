@@ -3,7 +3,7 @@ package com.example.bookmanager.application
 import com.example.bookmanager.domain.AuthorDomainService
 import com.example.bookmanager.domain.AuthorId
 import com.example.bookmanager.domain.Book
-import com.example.bookmanager.domain.BookRepository
+import com.example.bookmanager.domain.BookCommandRepository
 import com.example.bookmanager.domain.Price
 import com.example.bookmanager.domain.PublishStatus
 import com.example.bookmanager.domain.Title
@@ -12,7 +12,7 @@ import java.math.BigDecimal
 
 @Component
 class RegisterBookUseCase(
-    private val bookRepository: BookRepository,
+    private val bookCommandRepository: BookCommandRepository,
     private val authorDomainService: AuthorDomainService
 ) {
 
@@ -32,8 +32,8 @@ class RegisterBookUseCase(
                 authorIds = command.authorIds
             )
 
-            val saved = bookRepository.save(book)
-            BookOutput(saved)
+            val saved = bookCommandRepository.save(book)
+            saved.toOutput()
         }
     }
 
