@@ -1,13 +1,13 @@
 package com.example.bookmanager.domain
 
+import java.util.UUID
+
 @JvmInline
-value class BookId private constructor(val value: Long) {
+value class BookId private constructor(val value: UUID) {
     companion object {
-        fun of(value: Long): BookId {
-            if (value <= 0) {
-                throw DomainException(DomainErrorCode.INVALID_BOOK_ID, "BookId must be positive")
-            }
-            return BookId(value)
-        }
+        fun of(value: UUID): BookId =
+            BookId(Id.generate { value }.value)
+
+        fun generate(): BookId = BookId(Id.generate().value)
     }
 }

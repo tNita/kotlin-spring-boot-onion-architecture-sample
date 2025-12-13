@@ -52,7 +52,7 @@ data class UpdateBookRequest(
     @Schema(description = "著者IDの配列", example = "[\"018d1a2e-3b34-780a-a516-8a3f8a4f9a11\"]", required = false)
     val authorIds: List<UUID>? = null,
 ) {
-    fun toCommand(bookId: Long): UpdateBookUseCase.Command = UpdateBookUseCase.Command.fromNullable(
+    fun toCommand(bookId: UUID): UpdateBookUseCase.Command = UpdateBookUseCase.Command.fromNullable(
         bookId = bookId,
         title = title,
         price = price,

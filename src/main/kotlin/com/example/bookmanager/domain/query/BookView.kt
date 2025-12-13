@@ -8,7 +8,7 @@ import java.util.UUID
  * ドメインエンティティとは独立しており、投影やデノーマライズに使う。
  */
 data class BookView(
-    val id: Long,
+    val id: UUID,
     val title: String,
     val price: BigDecimal,
     val publishStatus: String,

@@ -19,7 +19,7 @@ data class AuthorResult(
 )
 
 data class BookOutput(
-    val id: Long,
+    val id: UUID,
     val title: String,
     val price: BigDecimal,
     val publishStatus: String,

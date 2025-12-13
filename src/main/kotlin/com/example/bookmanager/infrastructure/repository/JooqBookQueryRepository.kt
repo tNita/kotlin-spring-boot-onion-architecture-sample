@@ -33,7 +33,7 @@ class JooqBookQueryRepository(
         val bookIds = dsl.select(BOOK_AUTHORS.BOOK_ID)
             .from(BOOK_AUTHORS)
             .where(BOOK_AUTHORS.AUTHOR_ID.`in`(authorUuidList))
-            .fetchInto(Long::class.java)
+            .fetchInto(UUID::class.java)
             .toSet()
 
         if (bookIds.isEmpty()) return emptyList()
@@ -49,7 +49,7 @@ class JooqBookQueryRepository(
             }
     }
 
-    private fun loadAuthorIds(bookIds: Collection<Long>): Map<Long, List<UUID>> =
+    private fun loadAuthorIds(bookIds: Collection<UUID>): Map<UUID, List<UUID>> =
         dsl.select(BOOK_AUTHORS.BOOK_ID, BOOK_AUTHORS.AUTHOR_ID)
             .from(BOOK_AUTHORS)
             .where(BOOK_AUTHORS.BOOK_ID.`in`(bookIds))

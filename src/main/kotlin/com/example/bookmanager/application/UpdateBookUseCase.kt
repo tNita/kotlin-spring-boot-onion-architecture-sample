@@ -10,6 +10,7 @@ import com.example.bookmanager.domain.PublishStatus
 import com.example.bookmanager.domain.Title
 import org.springframework.stereotype.Component
 import java.math.BigDecimal
+import java.util.UUID
 
 /**
  * API 層からの PUT（冪等）更新に応えるユースケース。
@@ -76,7 +77,7 @@ class UpdateBookUseCase(
         )
 
     data class Command(
-        val bookId: Long,
+        val bookId: UUID,
         val title: UpdateField<String> = UpdateField.absent(),
         val price: UpdateField<BigDecimal> = UpdateField.absent(),
         val publishStatus: UpdateField<PublishStatus> = UpdateField.absent(),
@@ -88,7 +89,7 @@ class UpdateBookUseCase(
              * null は「未指定」として扱うための補助コンストラクタ。
              */
             fun fromNullable(
-                bookId: Long,
+                bookId: UUID,
                 title: String? = null,
                 price: BigDecimal? = null,
                 publishStatus: PublishStatus? = null,

@@ -37,7 +37,7 @@ class BookTest {
     @Test
     fun `出版済みから未出版への変更は例外`() {
         val published = Book.ofExisting(
-            id = BookId.of(1),
+            id = BookId.of(UUID.fromString("01890a3f-54c1-7f1e-8b10-cbc61ff35f40")),
             title = Title.of("Test"),
             price = Price.of(100),
             publishStatus = PublishStatus.PUBLISHED,

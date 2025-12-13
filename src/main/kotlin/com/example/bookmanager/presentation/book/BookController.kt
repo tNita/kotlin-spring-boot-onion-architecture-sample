@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("/api/books")
@@ -70,8 +71,8 @@ class BookController(
         ],
     )
     fun update(
-        @Parameter(description = "書籍ID", example = "1")
-        @PathVariable id: Long,
+        @Parameter(description = "書籍ID", example = "018d1a2e-3b34-780a-a516-8a3f8a4f9a11")
+        @PathVariable id: UUID,
         @Valid @RequestBody request: UpdateBookRequest,
     ): ResponseEntity<BookResponse> {
         val updated = updateBookUseCase.exec(request.toCommand(id))
@@ -91,8 +92,8 @@ class BookController(
         ],
     )
     fun find(
-        @Parameter(description = "書籍ID", example = "1")
-        @PathVariable id: Long,
+        @Parameter(description = "書籍ID", example = "018d1a2e-3b34-780a-a516-8a3f8a4f9a11")
+        @PathVariable id: UUID,
     ): ResponseEntity<BookResponse> {
         val result = getBookUseCase.exec(id)
         return ResponseEntity.ok(result.toResponse())

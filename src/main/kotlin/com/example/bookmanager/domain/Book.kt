@@ -21,7 +21,7 @@ data class Book(
                 throw DomainException(DomainErrorCode.NO_AUTHORS, "Book must have at least one author")
             }
             return Book(
-                id = null,
+                id = BookId.generate(),
                 title = title,
                 price = price,
                 publishStatus = publishStatus,

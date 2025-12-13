@@ -45,25 +45,25 @@ class JooqBookCommandRepository(
         return record.toDomain(authorIds)
     }
 
-    private fun upsertBook(tx: DSLContext, book: Book): BookId =
-        if (book.id == null) {
-            val insertedId = tx.insertInto(BOOKS)
-                .columns(BOOKS.TITLE, BOOKS.PRICE, BOOKS.PUBLISH_STATUS)
-                .values(book.title.value, book.price.amount, book.publishStatus.name)
-                .returning(BOOKS.ID)
-                .fetchOne()
-                ?.id
-                ?: error("書籍IDの採番に失敗しました")
-            BookId.of(insertedId)
-        } else {
-            tx.update(BOOKS)
+    private fun upsertBook(tx: DSLContext, book: Book): BookId {
+        val idToUse = book.id ?: BookId.generate()
+        val affected = tx.update(BOOKS)
+            .set(BOOKS.TITLE, book.title.value)
+            .set(BOOKS.PRICE, book.price.amount)
+            .set(BOOKS.PUBLISH_STATUS, book.publishStatus.name)
+            .where(BOOKS.ID.eq(idToUse.value))
+            .execute()
+
+        if (affected == 0) {
+            tx.insertInto(BOOKS)
+                .set(BOOKS.ID, idToUse.value)
                 .set(BOOKS.TITLE, book.title.value)
                 .set(BOOKS.PRICE, book.price.amount)
                 .set(BOOKS.PUBLISH_STATUS, book.publishStatus.name)
-                .where(BOOKS.ID.eq(book.id.value))
                 .execute()
-            book.id
         }
+        return idToUse
+    }
 
     private fun replaceBookAuthors(tx: DSLContext, bookId: BookId, authorIds: Set<Id>) {
         tx.deleteFrom(BOOK_AUTHORS)
