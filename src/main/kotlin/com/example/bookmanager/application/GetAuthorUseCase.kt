@@ -12,10 +12,11 @@ class GetAuthorUseCase(
     /**
      * 著者IDをキーに取得し、見つからない場合は業務エラーを返す。
      */
-    fun exec(authorId: AuthorId): AuthorOutput =
-        authorRepository.findById(authorId)?.let { AuthorOutput(it) }
+    fun exec(authorId: AuthorId): AuthorResult = runUseCase {
+        authorRepository.findById(authorId)?.let { AuthorResult(it) }
             ?: throw ApplicationException(
                 ApplicationErrorCode.AUTHOR_NOT_FOUND,
                 "Author not found: ${authorId.value}"
             )
+    }
 }

@@ -10,7 +10,7 @@ import java.util.UUID
  * アプリケーション層からプレゼンテーション層へ返却するシンプルなレスポンスモデル。
  * ドメインの値オブジェクト／エンティティはそのまま漏らさない。
  */
-data class AuthorOutput(
+data class AuthorResult(
     val id: UUID,
     val name: String,
     val birthDate: LocalDate
@@ -24,8 +24,8 @@ data class BookOutput(
     val authorIds: List<UUID>
 )
 
-fun AuthorOutput(author: Author): AuthorOutput =
-    AuthorOutput(
+fun AuthorResult(author: Author): AuthorResult =
+    AuthorResult(
         id = author.id.value,
         name = author.name.value,
         birthDate = author.birthDate.value

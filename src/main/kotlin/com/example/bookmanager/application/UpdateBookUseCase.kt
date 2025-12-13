@@ -26,16 +26,18 @@ class UpdateBookUseCase(
      * IDを元に書籍を部分更新する。入力がある項目のみを検証して上書きする。
      */
     fun exec(command: Command): BookOutput {
-        val bookId = BookId.of(command.bookId)
-        val existing = bookRepository.findById(bookId)
-            ?: throw ApplicationException(
-                ApplicationErrorCode.BOOK_NOT_FOUND,
-                "Book not found: ${bookId.value}"
-            )
+        return runUseCase {
+            val bookId = BookId.of(command.bookId)
+            val existing = bookRepository.findById(bookId)
+                ?: throw ApplicationException(
+                    ApplicationErrorCode.BOOK_NOT_FOUND,
+                    "Book not found: ${bookId.value}"
+                )
 
-        val updated = applyUpdates(existing, command)
-        val saved = bookRepository.save(updated)
-        return BookOutput(saved)
+            val updated = applyUpdates(existing, command)
+            val saved = bookRepository.save(updated)
+            BookOutput(saved)
+        }
     }
 
     private fun applyUpdates(book: Book, command: Command): Book {

@@ -17,14 +17,16 @@ class RegisterAuthorUseCase(
     /**
      * 著者の重複を避けつつ登録する。
      */
-    fun exec(command: Command): AuthorOutput {
-        val name = AuthorName.of(command.name)
-        val birthDate = BirthDate.of(command.birthDate)
-        authorDomainService.ensureNotDuplicated(name, birthDate)
+    fun exec(command: Command): AuthorResult {
+        return runUseCase {
+            val name = AuthorName.of(command.name)
+            val birthDate = BirthDate.of(command.birthDate)
+            authorDomainService.ensureNotDuplicated(name, birthDate)
 
-        val author = Author.create(name, birthDate)
-        val saved = authorRepository.save(author)
-        return AuthorOutput(saved)
+            val author = Author.create(name, birthDate)
+            val saved = authorRepository.save(author)
+            AuthorResult(saved)
+        }
     }
 
     data class Command(

@@ -3,11 +3,19 @@ package com.example.bookmanager.application
 /**
  * アプリケーション層のエラーコード。プレゼンテーション層でのレスポンス変換に利用する。
  */
-enum class ApplicationErrorCode {
-    AUTHOR_NOT_FOUND,
-    BOOK_NOT_FOUND,
-    BOOK_ID_MISSING,
-    INVALID_UPDATE_REQUEST
+enum class ApplicationErrorType {
+    NOT_FOUND,
+    CONFLICT,
+    INVALID_REQUEST
+}
+
+enum class ApplicationErrorCode(val type: ApplicationErrorType) {
+    AUTHOR_NOT_FOUND(ApplicationErrorType.NOT_FOUND),
+    BOOK_NOT_FOUND(ApplicationErrorType.NOT_FOUND),
+    BOOK_ID_MISSING(ApplicationErrorType.INVALID_REQUEST),
+    INVALID_UPDATE_REQUEST(ApplicationErrorType.INVALID_REQUEST),
+    INVALID_REQUEST(ApplicationErrorType.INVALID_REQUEST),
+    AUTHOR_DUPLICATE(ApplicationErrorType.CONFLICT)
 }
 
 class ApplicationException(

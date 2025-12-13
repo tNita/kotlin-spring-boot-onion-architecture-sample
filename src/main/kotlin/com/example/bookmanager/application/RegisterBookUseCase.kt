@@ -20,19 +20,21 @@ class RegisterBookUseCase(
      * 著者の存在を検証しつつ書籍を登録する。
      */
     fun exec(command: Command): BookOutput {
-        val title = Title.of(command.title)
-        val price = Price.of(command.price)
-        authorDomainService.ensureAllExist(command.authorIds)
+        return runUseCase {
+            val title = Title.of(command.title)
+            val price = Price.of(command.price)
+            authorDomainService.ensureAllExist(command.authorIds)
 
-        val book = Book.create(
-            title = title,
-            price = price,
-            publishStatus = command.publishStatus,
-            authorIds = command.authorIds
-        )
+            val book = Book.create(
+                title = title,
+                price = price,
+                publishStatus = command.publishStatus,
+                authorIds = command.authorIds
+            )
 
-        val saved = bookRepository.save(book)
-        return BookOutput(saved)
+            val saved = bookRepository.save(book)
+            BookOutput(saved)
+        }
     }
 
     data class Command(
