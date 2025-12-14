@@ -9,4 +9,5 @@ import com.example.bookmanager.domain.AuthorName
 interface AuthorQueryRepository {
     fun findById(id: AuthorId): AuthorView?
     fun findByName(name: AuthorName): List<AuthorView>
+    fun search(id: AuthorId?, name: AuthorName?): List<AuthorView>
 }

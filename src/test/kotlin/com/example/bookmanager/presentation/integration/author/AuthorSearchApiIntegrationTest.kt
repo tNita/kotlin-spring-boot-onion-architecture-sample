@@ -19,7 +19,7 @@ import org.springframework.web.context.WebApplicationContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class AuthorFindApiIntegrationTest {
+class AuthorSearchApiIntegrationTest {
 
     @Autowired
     private lateinit var context: WebApplicationContext
@@ -36,15 +36,15 @@ class AuthorFindApiIntegrationTest {
     }
 
     @Test
-    fun `GET 著者を取得できる`() {
+    fun `GET 著者IDで検索できる`() {
         val author = AuthorFixture.natsume()
         dsl.insert(author)
 
-        mockMvc.perform(get("/api/authors/{id}", author.id))
+        mockMvc.perform(get("/api/authors/search").param("id", author.id.toString()))
             .andExpect(status().isOk)
             .andExpect(content().contentTypeCompatibleWith("application/json"))
-            .andExpect(jsonPath("$.id").value(author.id.toString()))
-            .andExpect(jsonPath("$.name").value(author.name))
-            .andExpect(jsonPath("$.birthDate").value(author.birthDate.toString()))
+            .andExpect(jsonPath("$[0].id").value(author.id.toString()))
+            .andExpect(jsonPath("$[0].name").value(author.name))
+            .andExpect(jsonPath("$[0].birthDate").value(author.birthDate.toString()))
     }
 }

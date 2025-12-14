@@ -25,6 +25,18 @@ class JooqAuthorQueryRepository(
             .fetch()
             .mapNotNull { it.toView() }
 
+    override fun search(id: AuthorId?, name: AuthorName?): List<AuthorView> {
+        val conditions = mutableListOf<org.jooq.Condition>()
+        id?.let { conditions.add(AUTHORS.ID.eq(it.value)) }
+        name?.let { conditions.add(AUTHORS.NAME.containsIgnoreCase(it.value)) }
+        if (conditions.isEmpty()) return emptyList()
+
+        return dsl.selectFrom(AUTHORS)
+            .where(conditions)
+            .fetch()
+            .mapNotNull { it.toView() }
+    }
+
     private fun AuthorsRecord.toView(): AuthorView? {
         val id = this.id ?: return null
         val name = this.name ?: return null

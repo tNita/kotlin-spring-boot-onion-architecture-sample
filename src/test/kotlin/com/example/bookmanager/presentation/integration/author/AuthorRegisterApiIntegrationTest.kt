@@ -64,11 +64,11 @@ class AuthorRegisterApiIntegrationTest {
 
         val createdId = mvcResult.response.contentAsString.let { parseId(it) }
 
-        mockMvc.perform(get("/api/authors/{id}", createdId))
+        mockMvc.perform(get("/api/authors/search").param("id", createdId.toString()))
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.id").value(createdId.toString()))
-            .andExpect(jsonPath("$.name").value(request.name))
-            .andExpect(jsonPath("$.birthDate").value(request.birthDate.toString()))
+            .andExpect(jsonPath("$[0].id").value(createdId.toString()))
+            .andExpect(jsonPath("$[0].name").value(request.name))
+            .andExpect(jsonPath("$[0].birthDate").value(request.birthDate.toString()))
     }
 
     private fun parseId(json: String): UUID =
