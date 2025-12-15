@@ -46,6 +46,8 @@ class BookSearchApiIntegrationTest {
             .andExpect(content().contentTypeCompatibleWith("application/json"))
             .andExpect(jsonPath("$[0].id").value(ids.bookId1.toString()))
             .andExpect(jsonPath("$[0].title").value("吾輩は猫である"))
-            .andExpect(jsonPath("$[0].authorIds[0]").value(ids.authorId1.toString()))
+            .andExpect(jsonPath("$[0].authors[0].id").value(ids.authorId1.toString()))
+            .andExpect(jsonPath("$[0].authors[0].name").value("夏目漱石"))
+            .andExpect(jsonPath("$[0].authors[0].birthDate").value("1867-02-09"))
     }
 }

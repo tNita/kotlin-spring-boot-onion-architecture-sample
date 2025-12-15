@@ -6,6 +6,7 @@ import com.example.bookmanager.domain.query.AuthorQueryRepository
 import com.example.bookmanager.domain.query.AuthorView
 import com.example.bookmanager.jooq.tables.Authors.AUTHORS
 import com.example.bookmanager.jooq.tables.records.AuthorsRecord
+import org.jooq.Condition
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 
@@ -26,7 +27,7 @@ class JooqAuthorQueryRepository(
             .mapNotNull { it.toView() }
 
     override fun search(id: AuthorId?, name: AuthorName?): List<AuthorView> {
-        val conditions = mutableListOf<org.jooq.Condition>()
+        val conditions = mutableListOf<Condition>()
         id?.let { conditions.add(AUTHORS.ID.eq(it.value)) }
         name?.let { conditions.add(AUTHORS.NAME.containsIgnoreCase(it.value)) }
         if (conditions.isEmpty()) return emptyList()

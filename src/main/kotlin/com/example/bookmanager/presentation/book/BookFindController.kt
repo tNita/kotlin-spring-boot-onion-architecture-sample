@@ -29,7 +29,7 @@ class BookFindController(
             ApiResponse(
                 responseCode = "200",
                 description = "取得成功",
-                content = [Content(schema = Schema(implementation = BookResponse::class))],
+                content = [Content(schema = Schema(implementation = BookDetailResponse::class))],
             ),
             ApiResponse(responseCode = "404", description = "書籍が存在しない"),
         ],
@@ -37,8 +37,8 @@ class BookFindController(
     fun find(
         @Parameter(description = "書籍ID", example = "018d1a2e-3b34-780a-a516-8a3f8a4f9a11")
         @PathVariable id: UUID,
-    ): ResponseEntity<BookResponse> {
+    ): ResponseEntity<BookDetailResponse> {
         val result = getBookUseCase.exec(id)
-        return ResponseEntity.ok(result.toResponse())
+        return ResponseEntity.ok(result.toDetailResponse())
     }
 }

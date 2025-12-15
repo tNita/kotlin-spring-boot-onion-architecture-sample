@@ -27,12 +27,12 @@ class BookUpdateController(
 ) {
     @PutMapping("/{id}")
     @Operation(
-        summary = "書籍更新（指定項目のみ上書き）",
+        summary = "書籍更新",
         responses = [
             ApiResponse(
                 responseCode = "200",
                 description = "更新成功",
-                content = [Content(schema = Schema(implementation = BookResponse::class))],
+                content = [Content(schema = Schema(implementation = BookMutationResponse::class))],
             ),
             ApiResponse(responseCode = "400", description = "リクエスト不正"),
             ApiResponse(responseCode = "404", description = "書籍または著者が存在しない"),
@@ -42,8 +42,8 @@ class BookUpdateController(
         @Parameter(description = "書籍ID", example = "018d1a2e-3b34-780a-a516-8a3f8a4f9a11")
         @PathVariable id: UUID,
         @Valid @RequestBody request: UpdateBookRequest,
-    ): ResponseEntity<BookResponse> {
+    ): ResponseEntity<BookMutationResponse> {
         val updated = updateBookUseCase.exec(request.toCommand(id))
-        return ResponseEntity.ok(updated.toResponse())
+        return ResponseEntity.ok(updated.toMutationResponse())
     }
 }

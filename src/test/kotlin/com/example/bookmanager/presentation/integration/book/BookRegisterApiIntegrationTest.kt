@@ -73,8 +73,12 @@ class BookRegisterApiIntegrationTest {
             .andExpect(jsonPath("$.title").value("こころ"))
             .andExpect(jsonPath("$.price").value(1500.0))
             .andExpect(jsonPath("$.publishStatus").value(PublishStatus.UNPUBLISHED.name))
-            .andExpect(jsonPath("$.authorIds[0]").value(ids.authorId1.toString()))
-            .andExpect(jsonPath("$.authorIds[1]").value(ids.authorId2.toString()))
+            .andExpect(jsonPath("$.authors[0].id").value(ids.authorId1.toString()))
+            .andExpect(jsonPath("$.authors[0].name").value("夏目漱石"))
+            .andExpect(jsonPath("$.authors[0].birthDate").value("1867-02-09"))
+            .andExpect(jsonPath("$.authors[1].id").value(ids.authorId2.toString()))
+            .andExpect(jsonPath("$.authors[1].name").value("芥川龍之介"))
+            .andExpect(jsonPath("$.authors[1].birthDate").value("1892-03-01"))
     }
 
     private fun parseId(json: String): UUID {

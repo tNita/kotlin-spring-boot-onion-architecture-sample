@@ -8,17 +8,19 @@ import com.example.bookmanager.domain.Price
 import com.example.bookmanager.domain.PublishStatus
 import com.example.bookmanager.domain.Title
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 
 @Component
 class RegisterBookUseCase(
     private val bookCommandRepository: BookCommandRepository,
-    private val authorDomainService: AuthorDomainService
+    private val authorDomainService: AuthorDomainService,
 ) {
 
     /**
      * 著者の存在を検証しつつ書籍を登録する。
      */
+    @Transactional
     fun exec(command: Command): BookOutput {
         return runUseCase {
             val title = Title.of(command.title)

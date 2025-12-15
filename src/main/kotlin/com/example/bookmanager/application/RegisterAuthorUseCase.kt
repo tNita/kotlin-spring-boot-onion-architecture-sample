@@ -6,6 +6,7 @@ import com.example.bookmanager.domain.AuthorDomainService
 import com.example.bookmanager.domain.AuthorName
 import com.example.bookmanager.domain.BirthDate
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 @Component
@@ -17,6 +18,7 @@ class RegisterAuthorUseCase(
     /**
      * 著者の重複を避けつつ登録する。
      */
+    @Transactional
     fun exec(command: Command): AuthorResult {
         return runUseCase {
             val name = AuthorName.of(command.name)

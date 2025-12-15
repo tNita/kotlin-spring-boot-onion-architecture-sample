@@ -46,6 +46,8 @@ class BookFindApiIntegrationTest {
             .andExpect(jsonPath("$.title").value("吾輩は猫である"))
             .andExpect(jsonPath("$.price").value(1200.0))
             .andExpect(jsonPath("$.publishStatus").value(PublishStatus.PUBLISHED.name))
-            .andExpect(jsonPath("$.authorIds[0]").value(ids.authorId1.toString()))
+            .andExpect(jsonPath("$.authors[0].id").value(ids.authorId1.toString()))
+            .andExpect(jsonPath("$.authors[0].name").value("夏目漱石"))
+            .andExpect(jsonPath("$.authors[0].birthDate").value("1867-02-09"))
     }
 }

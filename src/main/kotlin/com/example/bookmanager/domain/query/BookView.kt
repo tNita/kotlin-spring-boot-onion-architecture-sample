@@ -12,5 +12,5 @@ data class BookView(
     val title: String,
     val price: BigDecimal,
     val publishStatus: String,
-    val authorIds: List<UUID>
+    val authors: List<AuthorView>
 )

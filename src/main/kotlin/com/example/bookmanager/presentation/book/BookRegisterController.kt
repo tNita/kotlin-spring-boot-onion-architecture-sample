@@ -30,7 +30,7 @@ class BookRegisterController(
             ApiResponse(
                 responseCode = "201",
                 description = "登録成功",
-                content = [Content(schema = Schema(implementation = BookResponse::class))],
+                content = [Content(schema = Schema(implementation = BookMutationResponse::class))],
             ),
             ApiResponse(responseCode = "400", description = "リクエスト不正"),
             ApiResponse(responseCode = "404", description = "著者が存在しない"),
@@ -38,8 +38,8 @@ class BookRegisterController(
     )
     fun register(
         @Valid @RequestBody request: RegisterBookRequest,
-    ): ResponseEntity<BookResponse> {
+    ): ResponseEntity<BookMutationResponse> {
         val created = registerBookUseCase.exec(request.toCommand())
-        return ResponseEntity.status(HttpStatus.CREATED).body(created.toResponse())
+        return ResponseEntity.status(HttpStatus.CREATED).body(created.toMutationResponse())
     }
 }

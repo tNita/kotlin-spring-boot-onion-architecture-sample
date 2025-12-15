@@ -23,7 +23,8 @@ data class BookOutput(
     val title: String,
     val price: BigDecimal,
     val publishStatus: String,
-    val authorIds: List<UUID>
+    val authorIds: List<UUID>,
+    val authors: List<AuthorResult> = emptyList(),
 )
 
 fun Author.toResult(): AuthorResult =
@@ -40,16 +41,15 @@ fun AuthorView.toResult(): AuthorResult =
         birthDate = this.birthDate
     )
 
-fun Book.toOutput(): BookOutput {
-    val bookId = this.id ?: throw ApplicationException(ApplicationErrorCode.BOOK_ID_MISSING, "Book id is missing")
-    return BookOutput(
-        id = bookId.value,
+fun Book.toOutput(authors: List<AuthorResult> = emptyList()): BookOutput =
+    BookOutput(
+        id = this.id.value,
         title = this.title.value,
         price = this.price.amount,
         publishStatus = this.publishStatus.name,
-        authorIds = this.authorIds.map { it.value }
+        authorIds = this.authorIds.map { it.value },
+        authors = authors,
     )
-}
 
 fun BookView.toOutput(): BookOutput =
     BookOutput(
@@ -57,5 +57,6 @@ fun BookView.toOutput(): BookOutput =
         title = this.title,
         price = this.price,
         publishStatus = this.publishStatus,
-        authorIds = this.authorIds
+        authorIds = this.authors.map { it.id },
+        authors = this.authors.map { it.toResult() },
     )
