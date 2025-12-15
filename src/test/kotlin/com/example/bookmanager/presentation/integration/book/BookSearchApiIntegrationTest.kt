@@ -2,8 +2,7 @@ package com.example.bookmanager.presentation.integration.book
 
 import com.example.bookmanager.support.book.BookSeedIds
 import com.example.bookmanager.support.book.seedDefaultBooks
-import com.example.bookmanager.support.db.deleteAllTables
-import org.jooq.DSLContext
+import com.example.bookmanager.support.db.IntegrationTestSupport
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,12 +18,9 @@ import org.springframework.web.context.WebApplicationContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class BookSearchApiIntegrationTest {
+class BookSearchApiIntegrationTest : IntegrationTestSupport() {
     @Autowired
     private lateinit var context: WebApplicationContext
-
-    @Autowired
-    private lateinit var dsl: DSLContext
 
     private lateinit var mockMvc: MockMvc
     private lateinit var ids: BookSeedIds
@@ -32,7 +28,6 @@ class BookSearchApiIntegrationTest {
     @BeforeEach
     fun setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build()
-        dsl.deleteAllTables()
         ids = seedDefaultBooks(dsl)
     }
 

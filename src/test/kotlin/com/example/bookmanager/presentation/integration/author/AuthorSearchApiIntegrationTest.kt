@@ -2,8 +2,7 @@ package com.example.bookmanager.presentation.integration.author
 
 import com.example.bookmanager.support.author.AuthorFixture
 import com.example.bookmanager.support.author.insert
-import com.example.bookmanager.support.db.deleteAllTables
-import org.jooq.DSLContext
+import com.example.bookmanager.support.db.IntegrationTestSupport
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,20 +16,16 @@ import org.springframework.web.context.WebApplicationContext
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class AuthorSearchApiIntegrationTest {
+class AuthorSearchApiIntegrationTest : IntegrationTestSupport() {
 
     @Autowired
     private lateinit var context: WebApplicationContext
-
-    @Autowired
-    private lateinit var dsl: DSLContext
 
     private lateinit var mockMvc: MockMvc
 
     @BeforeEach
     fun setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build()
-        dsl.deleteAllTables()
         dsl.insert(AuthorFixture.Companion.natsume())
         dsl.insert(AuthorFixture.Companion.akutagawa())
     }

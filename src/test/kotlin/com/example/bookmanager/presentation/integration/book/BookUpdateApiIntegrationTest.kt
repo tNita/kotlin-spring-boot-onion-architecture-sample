@@ -4,9 +4,8 @@ import com.example.bookmanager.domain.PublishStatus
 import com.example.bookmanager.presentation.book.UpdateBookRequest
 import com.example.bookmanager.support.book.BookSeedIds
 import com.example.bookmanager.support.book.seedDefaultBooks
-import com.example.bookmanager.support.db.deleteAllTables
+import com.example.bookmanager.support.db.IntegrationTestSupport
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.jooq.DSLContext
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,12 +21,9 @@ import java.math.BigDecimal
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class BookUpdateApiIntegrationTest {
+class BookUpdateApiIntegrationTest : IntegrationTestSupport() {
     @Autowired
     private lateinit var context: WebApplicationContext
-
-    @Autowired
-    private lateinit var dsl: DSLContext
 
     private lateinit var mockMvc: MockMvc
     private val objectMapper = ObjectMapper().findAndRegisterModules()
@@ -36,7 +32,6 @@ class BookUpdateApiIntegrationTest {
     @BeforeEach
     fun setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build()
-        dsl.deleteAllTables()
         ids = seedDefaultBooks(dsl)
     }
 

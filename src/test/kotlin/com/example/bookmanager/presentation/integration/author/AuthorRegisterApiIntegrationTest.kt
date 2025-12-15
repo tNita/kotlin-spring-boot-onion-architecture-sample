@@ -1,8 +1,7 @@
 package com.example.bookmanager.presentation.integration.author
 
 import com.example.bookmanager.presentation.author.RegisterAuthorRequest
-import com.example.bookmanager.support.db.deleteAllTables
-import org.jooq.DSLContext
+import com.example.bookmanager.support.db.IntegrationTestSupport
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,20 +20,16 @@ import java.util.UUID
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class AuthorRegisterApiIntegrationTest {
+class AuthorRegisterApiIntegrationTest : IntegrationTestSupport() {
 
     @Autowired
     private lateinit var context: WebApplicationContext
-
-    @Autowired
-    private lateinit var dsl: DSLContext
 
     private lateinit var mockMvc: MockMvc
 
     @BeforeEach
     fun setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build()
-        dsl.deleteAllTables()
     }
 
     @Test
