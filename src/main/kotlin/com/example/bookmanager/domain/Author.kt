@@ -20,9 +20,6 @@ data class Author(
             Author(id = id, name = name, birthDate = birthDate)
     }
 
-    fun updateProfile(newName: AuthorName, newBirthDate: BirthDate): Author =
-        copy(name = newName, birthDate = newBirthDate)
-
     fun isSamePerson(other: Author): Boolean =
         name == other.name && birthDate == other.birthDate
 }

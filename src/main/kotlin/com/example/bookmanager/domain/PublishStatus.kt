@@ -8,7 +8,6 @@ enum class PublishStatus {
     PUBLISHED;
 
     fun canTransitionTo(target: PublishStatus): Boolean {
-        if (this == PUBLISHED && target == UNPUBLISHED) return false
-        return true
+        return !(this == PUBLISHED && target == UNPUBLISHED)
     }
 }

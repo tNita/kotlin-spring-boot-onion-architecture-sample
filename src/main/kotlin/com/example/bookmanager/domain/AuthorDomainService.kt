@@ -12,7 +12,7 @@ class AuthorDomainService(
 ) {
 
     fun ensureNotDuplicated(name: AuthorName, birthDate: BirthDate) {
-        val alreadyExists = authorQueryRepository.findByName(name).any { it.birthDate == birthDate.value }
+        val alreadyExists = authorQueryRepository.findByName(name).any { it.birthDate.isEqual(birthDate.value) }
         if (alreadyExists) {
             throw DomainException(DomainErrorCode.AUTHOR_DUPLICATE, "Author already registered")
         }

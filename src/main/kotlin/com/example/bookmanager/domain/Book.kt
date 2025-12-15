@@ -4,7 +4,7 @@ package com.example.bookmanager.domain
  * 書籍エンティティ（集約ルート）。
  */
 data class Book(
-    val id: BookId? = null,
+    val id: BookId,
     val title: Title,
     val price: Price,
     val publishStatus: PublishStatus = PublishStatus.UNPUBLISHED,

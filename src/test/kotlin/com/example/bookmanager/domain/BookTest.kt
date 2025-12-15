@@ -3,6 +3,7 @@ package com.example.bookmanager.domain
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 import java.util.UUID
 
 class BookTest {
@@ -15,7 +16,7 @@ class BookTest {
         val ex = assertThrows(DomainException::class.java) {
             Book.create(
                 title = Title.of("Test"),
-                price = Price.of(100),
+                price = Price.of(BigDecimal("100")),
                 authorIds = emptyList()
             )
         }
@@ -27,7 +28,7 @@ class BookTest {
     fun `著者重複は集合に正規化される`() {
         val book = Book.create(
             title = Title.of("Test"),
-            price = Price.of(100),
+            price = Price.of(BigDecimal("1234")),
             authorIds = listOf(authorId1, authorId1, authorId2)
         )
 
@@ -39,7 +40,7 @@ class BookTest {
         val published = Book.ofExisting(
             id = BookId.of(UUID.fromString("01890a3f-54c1-7f1e-8b10-cbc61ff35f40")),
             title = Title.of("Test"),
-            price = Price.of(100),
+            price = Price.of(BigDecimal("1234")),
             publishStatus = PublishStatus.PUBLISHED,
             authorIds = setOf(authorId1)
         )
