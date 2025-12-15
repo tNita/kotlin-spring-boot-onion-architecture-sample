@@ -14,7 +14,6 @@ import org.jooq.DSLContext
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Repository
 import java.math.BigDecimal
-import java.util.UUID
 
 @Repository
 @Primary
@@ -22,55 +21,49 @@ class JooqBookCommandRepository(
     private val dsl: DSLContext,
 ) : BookCommandRepository {
     override fun save(book: Book): Book {
-        return dsl.transactionResult { config ->
-            val tx = config.dsl()
-            val bookId = upsertBook(tx, book)
-            replaceBookAuthors(tx, bookId, book.authorIds)
-            book.copy(id = bookId)
-        }
-    }
-
-    override fun findById(id: BookId): Book? {
-        val record = dsl.selectFrom(BOOKS)
-            .where(BOOKS.ID.eq(id.value))
-            .fetchOne() ?: return null
-
-        val authorIds = dsl.select(BOOK_AUTHORS.AUTHOR_ID)
-            .from(BOOK_AUTHORS)
-            .where(BOOK_AUTHORS.BOOK_ID.eq(id.value))
-            .fetchInto(UUID::class.java)
-            .map { uuid -> Id.generate { uuid } }
-            .toSet()
-
-        return record.toDomain(authorIds)
-    }
-
-    private fun upsertBook(tx: DSLContext, book: Book): BookId {
-        val idToUse = book.id ?: BookId.generate()
-        val affected = tx.update(BOOKS)
+        dsl.insertInto(BOOKS)
+            .set(BOOKS.ID, book.id.value)
             .set(BOOKS.TITLE, book.title.value)
             .set(BOOKS.PRICE, book.price.amount)
             .set(BOOKS.PUBLISH_STATUS, book.publishStatus.name)
-            .where(BOOKS.ID.eq(idToUse.value))
+            .onConflict(BOOKS.ID)
+            .doUpdate()
+            .set(BOOKS.TITLE, book.title.value)
+            .set(BOOKS.PRICE, book.price.amount)
+            .set(BOOKS.PUBLISH_STATUS, book.publishStatus.name)
             .execute()
+        replaceBookAuthors(dsl, book.id, book.authorIds)
+        return book.copy(id = book.id)
+    }
 
-        if (affected == 0) {
-            tx.insertInto(BOOKS)
-                .set(BOOKS.ID, idToUse.value)
-                .set(BOOKS.TITLE, book.title.value)
-                .set(BOOKS.PRICE, book.price.amount)
-                .set(BOOKS.PUBLISH_STATUS, book.publishStatus.name)
-                .execute()
-        }
-        return idToUse
+    override fun findById(id: BookId): Book? {
+        val records = dsl.select(
+            BOOKS.ID,
+            BOOKS.TITLE,
+            BOOKS.PRICE,
+            BOOKS.PUBLISH_STATUS,
+            BOOK_AUTHORS.AUTHOR_ID,
+        )
+            .from(BOOKS)
+            .leftJoin(BOOK_AUTHORS)
+            .on(BOOKS.ID.eq(BOOK_AUTHORS.BOOK_ID))
+            .where(BOOKS.ID.eq(id.value))
+            .fetch()
+        if (records.isEmpty()) return null
+
+        val bookRecord = records[0].into(BOOKS)
+        val authorIds = records
+            .mapNotNull { it.get(BOOK_AUTHORS.AUTHOR_ID) }
+            .map { uuid -> Id.generate { uuid } }
+            .toSet()
+
+        return bookRecord.toDomain(authorIds)
     }
 
     private fun replaceBookAuthors(tx: DSLContext, bookId: BookId, authorIds: Set<Id>) {
         tx.deleteFrom(BOOK_AUTHORS)
             .where(BOOK_AUTHORS.BOOK_ID.eq(bookId.value))
             .execute()
-
-        if (authorIds.isEmpty()) return
 
         authorIds.forEach { authorId ->
             tx.insertInto(BOOK_AUTHORS)
