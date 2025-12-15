@@ -22,3 +22,8 @@
 - DB 起動: `docker compose up -d postgres`
 - アプリ起動: `./gradlew bootRun`（DB が起動していること）
 - Swagger UI: アプリ起動後、`http://localhost:8080/swagger-ui/index.html` にアクセス
+
+## TODO
+- フォーマッター・リンターの導入
+- 各層ごとのマルチプロジェクト構成の検討
+- jOOQのKotlinコード自動生成設定
