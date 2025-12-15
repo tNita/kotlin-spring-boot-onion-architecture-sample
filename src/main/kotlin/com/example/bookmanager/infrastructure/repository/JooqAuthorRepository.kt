@@ -5,7 +5,6 @@ import com.example.bookmanager.domain.AuthorId
 import com.example.bookmanager.domain.AuthorName
 import com.example.bookmanager.domain.AuthorRepository
 import com.example.bookmanager.domain.BirthDate
-import com.example.bookmanager.domain.query.AuthorView
 import com.example.bookmanager.jooq.tables.Authors.AUTHORS
 import com.example.bookmanager.jooq.tables.records.AuthorsRecord
 import org.jooq.DSLContext

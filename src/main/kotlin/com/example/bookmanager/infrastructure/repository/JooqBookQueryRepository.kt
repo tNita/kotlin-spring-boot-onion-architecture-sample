@@ -10,7 +10,6 @@ import com.example.bookmanager.jooq.tables.BookAuthors.BOOK_AUTHORS
 import com.example.bookmanager.jooq.tables.Books.BOOKS
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
-import java.math.BigDecimal
 
 @Repository
 class JooqBookQueryRepository(

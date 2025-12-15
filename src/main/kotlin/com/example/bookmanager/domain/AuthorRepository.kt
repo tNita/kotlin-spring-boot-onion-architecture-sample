@@ -1,7 +1,5 @@
 package com.example.bookmanager.domain
 
-import com.example.bookmanager.domain.query.AuthorView
-
 interface AuthorRepository {
     fun save(author: Author): Author
     fun findById(id: AuthorId): Author?

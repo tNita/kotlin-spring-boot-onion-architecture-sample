@@ -1,6 +1,5 @@
 package com.example.bookmanager.domain.query
 
-import com.example.bookmanager.domain.AuthorId
 import com.example.bookmanager.domain.AuthorName
 import com.example.bookmanager.domain.BookId
 

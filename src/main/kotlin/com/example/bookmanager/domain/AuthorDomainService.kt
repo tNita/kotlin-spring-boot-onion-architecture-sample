@@ -1,6 +1,5 @@
 package com.example.bookmanager.domain
 
-import com.example.bookmanager.domain.query.AuthorQueryRepository
 import org.springframework.stereotype.Component
 
 /**

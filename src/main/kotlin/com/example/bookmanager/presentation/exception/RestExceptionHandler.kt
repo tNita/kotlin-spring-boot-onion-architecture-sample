@@ -1,6 +1,5 @@
 package com.example.bookmanager.presentation.exception
 
-import com.example.bookmanager.application.ApplicationErrorCode
 import com.example.bookmanager.application.ApplicationException
 import com.example.bookmanager.application.ApplicationErrorType
 import io.swagger.v3.oas.annotations.Hidden
