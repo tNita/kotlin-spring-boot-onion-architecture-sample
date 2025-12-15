@@ -1,8 +1,9 @@
-package com.example.bookmanager.presentation.exception
+package com.example.bookmanager.presentation.unit.exception
 
 import com.example.bookmanager.application.ApplicationErrorCode
 import com.example.bookmanager.application.ApplicationErrorType
 import com.example.bookmanager.application.ApplicationException
+import com.example.bookmanager.presentation.exception.RestExceptionHandler
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock

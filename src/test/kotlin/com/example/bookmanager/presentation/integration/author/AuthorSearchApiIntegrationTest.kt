@@ -10,10 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
@@ -33,18 +31,32 @@ class AuthorSearchApiIntegrationTest {
     fun setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build()
         dsl.deleteAllTables()
+        dsl.insert(AuthorFixture.Companion.natsume())
+        dsl.insert(AuthorFixture.Companion.akutagawa())
     }
 
     @Test
-    fun `GET 著者IDで検索できる`() {
-        val author = AuthorFixture.natsume()
-        dsl.insert(author)
+    fun `GET 著者名部分一致で著者を検索できる`() {
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/api/authors/search")
+                .param("name", "漱石"),
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith("application/json"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("夏目漱石"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].birthDate").value("1867-02-09"))
+    }
 
-        mockMvc.perform(get("/api/authors/search").param("id", author.id.toString()))
-            .andExpect(status().isOk)
-            .andExpect(content().contentTypeCompatibleWith("application/json"))
-            .andExpect(jsonPath("$[0].id").value(author.id.toString()))
-            .andExpect(jsonPath("$[0].name").value(author.name))
-            .andExpect(jsonPath("$[0].birthDate").value(author.birthDate.toString()))
+    @Test
+    fun `GET 著者IDで著者を検索できる`() {
+        val author = AuthorFixture.Companion.akutagawa()
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/api/authors/search")
+                .param("id", author.id.toString()),
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith("application/json"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(author.id.toString()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(author.name))
     }
 }
