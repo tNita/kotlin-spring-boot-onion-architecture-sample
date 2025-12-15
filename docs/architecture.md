@@ -36,7 +36,7 @@ graph TD
 - インフラ: RDB や外部システム連携を担当し、ドメインにインフラ詳細を漏らさない
 
 ### 設計の進め方
-- ドメインモデルは [`docs/domain-modeling.drawio.svg`](docs/domain-modeling.drawio.svg) を基準とする
+- ドメインモデルは [`domain-modeling.drawio.svg`](./domain-modeling.drawio.svg) を基準とする
 - ドメイン層は戦術的 DDD パターン（値オブジェクト / エンティティ / リポジトリ / ドメインサービス）で実装する
 
 ## API 設計の前提
