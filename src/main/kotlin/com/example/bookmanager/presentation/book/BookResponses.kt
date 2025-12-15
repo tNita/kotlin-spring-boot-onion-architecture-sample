@@ -1,6 +1,7 @@
 package com.example.bookmanager.presentation.book
 
-import com.example.bookmanager.application.BookOutput
+import com.example.bookmanager.application.CommandBookOutput
+import com.example.bookmanager.application.QueryBookOutput
 import com.example.bookmanager.presentation.author.AuthorResponse
 import com.example.bookmanager.presentation.author.toResponse
 import com.example.bookmanager.domain.PublishStatus
@@ -36,7 +37,7 @@ data class BookMutationResponse(
     val authorIds: List<UUID>,
 )
 
-fun BookOutput.toDetailResponse(): BookDetailResponse = BookDetailResponse(
+fun QueryBookOutput.toDetailResponse(): BookDetailResponse = BookDetailResponse(
     id = id,
     title = title,
     price = price,
@@ -44,7 +45,7 @@ fun BookOutput.toDetailResponse(): BookDetailResponse = BookDetailResponse(
     authors = authors.map { it.toResponse() },
 )
 
-fun BookOutput.toMutationResponse(): BookMutationResponse = BookMutationResponse(
+fun CommandBookOutput.toMutationResponse(): BookMutationResponse = BookMutationResponse(
     id = id,
     title = title,
     price = price,

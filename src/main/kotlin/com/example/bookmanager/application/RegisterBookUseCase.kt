@@ -21,7 +21,7 @@ class RegisterBookUseCase(
      * 著者の存在を検証しつつ書籍を登録する。
      */
     @Transactional
-    fun exec(parameter: Parameter): BookOutput {
+    fun exec(parameter: Parameter): CommandBookOutput {
         return runUseCase {
             val title = Title.of(parameter.title)
             val price = Price.of(parameter.price)
@@ -35,7 +35,7 @@ class RegisterBookUseCase(
             )
 
             val saved = bookRepository.save(book)
-            saved.toOutput()
+            saved.toCommandOutput()
         }
     }
 

@@ -1,6 +1,5 @@
 package com.example.bookmanager.presentation.book
 
-import com.example.bookmanager.application.BookOutput
 import com.example.bookmanager.application.UpdateBookUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter

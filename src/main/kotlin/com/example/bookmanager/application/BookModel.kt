@@ -5,26 +5,28 @@ import com.example.bookmanager.domain.Book
 import com.example.bookmanager.domain.query.AuthorView
 import com.example.bookmanager.domain.query.BookView
 import java.math.BigDecimal
-import java.time.LocalDate
 import java.util.UUID
 
 /**
  * アプリケーション層からプレゼンテーション層へ返却するシンプルなレスポンスモデル。
  * ドメインの値オブジェクト／エンティティはそのまま漏らさない。
  */
-data class AuthorResult(
+
+data class CommandBookOutput(
     val id: UUID,
-    val name: String,
-    val birthDate: LocalDate
+    val title: String,
+    val price: BigDecimal,
+    val publishStatus: String,
+    val authorIds: List<UUID>
 )
 
-data class BookOutput(
+data class QueryBookOutput(
     val id: UUID,
     val title: String,
     val price: BigDecimal,
     val publishStatus: String,
     val authorIds: List<UUID>,
-    val authors: List<AuthorResult> = emptyList(),
+    val authors: List<AuthorResult>,
 )
 
 fun Author.toResult(): AuthorResult =
@@ -41,18 +43,17 @@ fun AuthorView.toResult(): AuthorResult =
         birthDate = this.birthDate
     )
 
-fun Book.toOutput(authors: List<AuthorResult> = emptyList()): BookOutput =
-    BookOutput(
+fun Book.toCommandOutput(): CommandBookOutput =
+    CommandBookOutput(
         id = this.id.value,
         title = this.title.value,
         price = this.price.amount,
         publishStatus = this.publishStatus.name,
         authorIds = this.authorIds.map { it.value },
-        authors = authors,
     )
 
-fun BookView.toOutput(): BookOutput =
-    BookOutput(
+fun BookView.toQueryOutput(): QueryBookOutput =
+    QueryBookOutput(
         id = this.id,
         title = this.title,
         price = this.price,

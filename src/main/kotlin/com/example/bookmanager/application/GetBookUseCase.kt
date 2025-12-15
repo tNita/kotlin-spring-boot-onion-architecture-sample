@@ -13,13 +13,13 @@ class GetBookUseCase(
     /**
      * 書籍IDをキーに取得する。存在しない場合は業務エラーとする。
      */
-    fun exec(bookId: UUID): BookOutput = runUseCase {
+    fun exec(bookId: UUID): QueryBookOutput = runUseCase {
         val id = BookId.of(bookId)
         val book = bookQueryRepository.findById(id)
             ?: throw ApplicationException(
                 ApplicationErrorCode.BOOK_NOT_FOUND,
                 "指定された書籍が見つかりません (id=$bookId)"
             )
-        book.toOutput()
+        book.toQueryOutput()
     }
 }

@@ -1,6 +1,6 @@
 package com.example.bookmanager.presentation.book
 
-import com.example.bookmanager.application.BookOutput
+import com.example.bookmanager.application.QueryBookOutput
 import com.example.bookmanager.application.SearchBookUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -38,5 +38,5 @@ class BookSearchController(
     fun search(
         @Parameter(description = "著者名（完全一致）", example = "夏目漱石")
         @RequestParam @NotBlank authorName: String,
-    ): List<BookDetailResponse> = searchBookUseCase.exec(authorName).map(BookOutput::toDetailResponse)
+    ): List<BookDetailResponse> = searchBookUseCase.exec(authorName).map(QueryBookOutput::toDetailResponse)
 }

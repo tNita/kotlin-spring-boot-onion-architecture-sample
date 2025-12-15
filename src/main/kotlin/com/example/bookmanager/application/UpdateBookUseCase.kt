@@ -24,7 +24,7 @@ class UpdateBookUseCase(
 
     /** IDを元に書籍を全項目上書きする。 */
     @Transactional
-    fun exec(parameter: Parameter): BookOutput {
+    fun exec(parameter: Parameter): CommandBookOutput {
         return runUseCase {
             val bookId = BookId.of(parameter.bookId)
             val existing = bookRepository.findById(bookId)
@@ -35,7 +35,7 @@ class UpdateBookUseCase(
 
             val updated = applyUpdates(existing, parameter)
             val saved = bookRepository.save(updated)
-            saved.toOutput()
+            saved.toCommandOutput()
         }
     }
 

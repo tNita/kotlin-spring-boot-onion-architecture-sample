@@ -12,10 +12,7 @@ enum class ApplicationErrorType {
 enum class ApplicationErrorCode(val type: ApplicationErrorType) {
     AUTHOR_NOT_FOUND(ApplicationErrorType.NOT_FOUND),
     BOOK_NOT_FOUND(ApplicationErrorType.NOT_FOUND),
-    BOOK_ID_MISSING(ApplicationErrorType.INVALID_REQUEST),
-    INVALID_UPDATE_REQUEST(ApplicationErrorType.INVALID_REQUEST),
     INVALID_REQUEST(ApplicationErrorType.INVALID_REQUEST),
-    AUTHOR_DUPLICATE(ApplicationErrorType.CONFLICT)
 }
 
 class ApplicationException(

@@ -12,11 +12,11 @@ class SearchBookUseCase(
     /**
      * 著者名から書籍を検索し、重複を排除して返す。
      */
-    fun exec(authorName: String): List<BookOutput> {
+    fun exec(authorName: String): List<QueryBookOutput> {
         return runUseCase {
             val name = AuthorName.of(authorName)
             bookQueryRepository.findByAuthorName(name)
-                .map { book -> book.toOutput() }
+                .map { book -> book.toQueryOutput() }
         }
     }
 }
