@@ -39,7 +39,7 @@ class BookRegisterController(
     fun register(
         @Valid @RequestBody request: RegisterBookRequest,
     ): ResponseEntity<BookMutationResponse> {
-        val created = registerBookUseCase.exec(request.toCommand())
+        val created = registerBookUseCase.exec(request.toParameter())
         return ResponseEntity.status(HttpStatus.CREATED).body(created.toMutationResponse())
     }
 }

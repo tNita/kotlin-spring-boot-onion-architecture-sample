@@ -19,10 +19,10 @@ class RegisterAuthorUseCase(
      * 著者の重複を避けつつ登録する。
      */
     @Transactional
-    fun exec(command: Command): AuthorResult {
+    fun exec(parameter: Parameter): AuthorResult {
         return runUseCase {
-            val name = AuthorName.of(command.name)
-            val birthDate = BirthDate.of(command.birthDate)
+            val name = AuthorName.of(parameter.name)
+            val birthDate = BirthDate.of(parameter.birthDate)
             authorDomainService.ensureNotDuplicated(name, birthDate)
 
             val author = Author.create(name, birthDate)
@@ -31,7 +31,7 @@ class RegisterAuthorUseCase(
         }
     }
 
-    data class Command(
+    data class Parameter(
         val name: String,
         val birthDate: LocalDate
     )

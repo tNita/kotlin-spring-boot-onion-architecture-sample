@@ -33,7 +33,7 @@ data class RegisterBookRequest(
     @Schema(description = "著者IDの配列", example = "[\"018d1a2e-3b34-780a-a516-8a3f8a4f9a11\"]")
     val authorIds: List<UUID>,
 ) {
-    fun toCommand(): RegisterBookUseCase.Command = RegisterBookUseCase.Command(
+    fun toParameter(): RegisterBookUseCase.Parameter = RegisterBookUseCase.Parameter(
         title = title,
         price = price,
         publishStatus = publishStatus,
@@ -59,7 +59,7 @@ data class UpdateBookRequest(
     @Schema(description = "著者IDの配列", example = "[\"018d1a2e-3b34-780a-a516-8a3f8a4f9a11\"]")
     val authorIds: List<UUID>,
 ) {
-    fun toCommand(bookId: UUID): UpdateBookUseCase.Command = UpdateBookUseCase.Command.from(
+    fun toParameter(bookId: UUID): UpdateBookUseCase.Parameter = UpdateBookUseCase.Parameter.from(
         bookId = bookId,
         title = title,
         price = price,

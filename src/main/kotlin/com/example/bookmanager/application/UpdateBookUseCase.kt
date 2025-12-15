@@ -24,36 +24,36 @@ class UpdateBookUseCase(
 
     /** IDを元に書籍を全項目上書きする。 */
     @Transactional
-    fun exec(command: Command): BookOutput {
+    fun exec(parameter: Parameter): BookOutput {
         return runUseCase {
-            val bookId = BookId.of(command.bookId)
+            val bookId = BookId.of(parameter.bookId)
             val existing = bookCommandRepository.findById(bookId)
                 ?: throw ApplicationException(
                     ApplicationErrorCode.BOOK_NOT_FOUND,
                     "Book not found: ${bookId.value}"
                 )
 
-            val updated = applyUpdates(existing, command)
+            val updated = applyUpdates(existing, parameter)
             val saved = bookCommandRepository.save(updated)
             saved.toOutput()
         }
     }
 
-    private fun applyUpdates(book: Book, command: Command): Book {
-        val title = Title.of(command.title)
-        val price = Price.of(command.price)
-        val authorIds = command.authorIds
+    private fun applyUpdates(book: Book, parameter: Parameter): Book {
+        val title = Title.of(parameter.title)
+        val price = Price.of(parameter.price)
+        val authorIds = parameter.authorIds
 
         authorDomainService.ensureAllExist(authorIds)
 
         return book
             .withTitle(title)
             .withPrice(price)
-            .withPublishStatus(command.publishStatus)
+            .withPublishStatus(parameter.publishStatus)
             .withAuthors(authorIds)
     }
 
-    data class Command(
+    data class Parameter(
         val bookId: UUID,
         val title: String,
         val price: BigDecimal,
@@ -67,7 +67,7 @@ class UpdateBookUseCase(
                 price: BigDecimal,
                 publishStatus: PublishStatus,
                 authorIds: List<AuthorId>
-            ): Command = Command(
+            ): Parameter = Parameter(
                 bookId = bookId,
                 title = title,
                 price = price,

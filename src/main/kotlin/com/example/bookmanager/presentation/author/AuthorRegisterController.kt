@@ -40,7 +40,7 @@ class AuthorRegisterController(
         @Valid @RequestBody request: RegisterAuthorRequest,
     ): ResponseEntity<AuthorResponse> {
         val created = registerAuthorUseCase.exec(
-            RegisterAuthorUseCase.Command(
+            RegisterAuthorUseCase.Parameter(
                 name = request.name,
                 birthDate = request.birthDate,
             ),

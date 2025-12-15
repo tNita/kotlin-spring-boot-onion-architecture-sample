@@ -43,7 +43,7 @@ class BookUpdateController(
         @PathVariable id: UUID,
         @Valid @RequestBody request: UpdateBookRequest,
     ): ResponseEntity<BookMutationResponse> {
-        val updated = updateBookUseCase.exec(request.toCommand(id))
+        val updated = updateBookUseCase.exec(request.toParameter(id))
         return ResponseEntity.ok(updated.toMutationResponse())
     }
 }
