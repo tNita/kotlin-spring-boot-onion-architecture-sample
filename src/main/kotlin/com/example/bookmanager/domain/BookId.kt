@@ -1,5 +1,6 @@
 package com.example.bookmanager.domain
 
+import com.example.bookmanager.shared.Id
 import java.util.UUID
 
 @JvmInline

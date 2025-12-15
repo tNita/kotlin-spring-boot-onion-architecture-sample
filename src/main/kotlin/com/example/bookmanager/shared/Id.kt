@@ -1,5 +1,7 @@
-package com.example.bookmanager.domain
+package com.example.bookmanager.shared
 
+import com.example.bookmanager.domain.DomainErrorCode
+import com.example.bookmanager.domain.DomainException
 import com.fasterxml.uuid.Generators
 import java.util.UUID
 

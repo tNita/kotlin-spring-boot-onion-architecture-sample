@@ -1,6 +1,7 @@
 package com.example.bookmanager.domain.query
 
 import com.example.bookmanager.domain.AuthorId
+import com.example.bookmanager.domain.AuthorName
 import com.example.bookmanager.domain.BookId
 
 /**
@@ -9,5 +10,5 @@ import com.example.bookmanager.domain.BookId
  */
 interface BookQueryRepository {
     fun findById(id: BookId): BookView?
-    fun findByAuthorIds(authorIds: Collection<AuthorId>): List<BookView>
+    fun findByAuthorName(authorName: AuthorName): List<BookView>
 }

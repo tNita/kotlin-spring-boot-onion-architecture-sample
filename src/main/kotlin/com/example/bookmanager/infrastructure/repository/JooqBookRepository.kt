@@ -2,8 +2,8 @@ package com.example.bookmanager.infrastructure.repository
 
 import com.example.bookmanager.domain.Book
 import com.example.bookmanager.domain.BookId
-import com.example.bookmanager.domain.BookCommandRepository
-import com.example.bookmanager.domain.Id
+import com.example.bookmanager.domain.BookRepository
+import com.example.bookmanager.shared.Id
 import com.example.bookmanager.domain.Price
 import com.example.bookmanager.domain.PublishStatus
 import com.example.bookmanager.domain.Title
@@ -17,9 +17,9 @@ import java.math.BigDecimal
 
 @Repository
 @Primary
-class JooqBookCommandRepository(
+class JooqBookRepository(
     private val dsl: DSLContext,
-) : BookCommandRepository {
+) : BookRepository {
     override fun save(book: Book): Book {
         dsl.insertInto(BOOKS)
             .set(BOOKS.ID, book.id.value)

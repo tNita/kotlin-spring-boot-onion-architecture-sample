@@ -4,7 +4,7 @@ import com.example.bookmanager.domain.AuthorDomainService
 import com.example.bookmanager.domain.AuthorId
 import com.example.bookmanager.domain.Book
 import com.example.bookmanager.domain.BookId
-import com.example.bookmanager.domain.BookCommandRepository
+import com.example.bookmanager.domain.BookRepository
 import com.example.bookmanager.domain.Price
 import com.example.bookmanager.domain.PublishStatus
 import com.example.bookmanager.domain.Title
@@ -18,7 +18,7 @@ import java.util.UUID
  */
 @Component
 class UpdateBookUseCase(
-    private val bookCommandRepository: BookCommandRepository,
+    private val bookRepository: BookRepository,
     private val authorDomainService: AuthorDomainService,
 ) {
 
@@ -27,14 +27,14 @@ class UpdateBookUseCase(
     fun exec(parameter: Parameter): BookOutput {
         return runUseCase {
             val bookId = BookId.of(parameter.bookId)
-            val existing = bookCommandRepository.findById(bookId)
+            val existing = bookRepository.findById(bookId)
                 ?: throw ApplicationException(
                     ApplicationErrorCode.BOOK_NOT_FOUND,
                     "Book not found: ${bookId.value}"
                 )
 
             val updated = applyUpdates(existing, parameter)
-            val saved = bookCommandRepository.save(updated)
+            val saved = bookRepository.save(updated)
             saved.toOutput()
         }
     }

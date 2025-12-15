@@ -1,7 +1,7 @@
 package com.example.bookmanager.application
 
 import com.example.bookmanager.domain.Author
-import com.example.bookmanager.domain.AuthorCommandRepository
+import com.example.bookmanager.domain.AuthorRepository
 import com.example.bookmanager.domain.AuthorDomainService
 import com.example.bookmanager.domain.AuthorName
 import com.example.bookmanager.domain.BirthDate
@@ -11,7 +11,7 @@ import java.time.LocalDate
 
 @Component
 class RegisterAuthorUseCase(
-    private val authorCommandRepository: AuthorCommandRepository,
+    private val authorRepository: AuthorRepository,
     private val authorDomainService: AuthorDomainService
 ) {
 
@@ -23,10 +23,10 @@ class RegisterAuthorUseCase(
         return runUseCase {
             val name = AuthorName.of(parameter.name)
             val birthDate = BirthDate.of(parameter.birthDate)
-            authorDomainService.ensureNotDuplicated(name, birthDate)
-
             val author = Author.create(name, birthDate)
-            val saved = authorCommandRepository.save(author)
+            authorDomainService.ensureNotDuplicated(author)
+
+            val saved = authorRepository.save(author)
             saved.toResult()
         }
     }

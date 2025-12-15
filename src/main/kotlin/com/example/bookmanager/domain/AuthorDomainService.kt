@@ -8,21 +8,22 @@ import org.springframework.stereotype.Component
  */
 @Component
 class AuthorDomainService(
-    private val authorQueryRepository: AuthorQueryRepository
+    private val authorRepository: AuthorRepository
 ) {
 
-    fun ensureNotDuplicated(name: AuthorName, birthDate: BirthDate) {
-        val alreadyExists = authorQueryRepository.findByName(name).any { it.birthDate.isEqual(birthDate.value) }
+    fun ensureNotDuplicated(author: Author) {
+        val alreadyExists = authorRepository.findByName(author.name).any { it.isSamePerson(author) }
         if (alreadyExists) {
             throw DomainException(DomainErrorCode.AUTHOR_DUPLICATE, "Author already registered")
         }
     }
 
     fun ensureAllExist(authorIds: Collection<AuthorId>) {
-        val missing = authorIds.filter { authorQueryRepository.findById(it) == null }
-        if (missing.isNotEmpty()) {
-            val joinedIds = missing.joinToString(",") { it.value.toString() }
-            throw DomainException(DomainErrorCode.AUTHOR_NOT_FOUND, "Author not found: $joinedIds")
+        val authors = authorRepository.findByIds(authorIds)
+        return authorIds.forEach { authorId ->
+            if (authors.none { it.id == authorId }) {
+                throw DomainException(DomainErrorCode.AUTHOR_NOT_FOUND, "Author not found: $authorId")
+            }
         }
     }
 }

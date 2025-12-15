@@ -1,6 +1,6 @@
 package com.example.bookmanager.infrastructure.repository
 
-import com.example.bookmanager.domain.AuthorId
+import com.example.bookmanager.domain.AuthorName
 import com.example.bookmanager.domain.BookId
 import com.example.bookmanager.domain.query.AuthorView
 import com.example.bookmanager.domain.query.BookQueryRepository
@@ -27,78 +27,57 @@ class JooqBookQueryRepository(
             AUTHORS.BIRTH_DATE,
         )
             .from(BOOKS)
-            .leftJoin(BOOK_AUTHORS).on(BOOK_AUTHORS.BOOK_ID.eq(BOOKS.ID))
-            .leftJoin(AUTHORS).on(AUTHORS.ID.eq(BOOK_AUTHORS.AUTHOR_ID))
+            .join(BOOK_AUTHORS).on(BOOK_AUTHORS.BOOK_ID.eq(BOOKS.ID))
+            .join(AUTHORS).on(AUTHORS.ID.eq(BOOK_AUTHORS.AUTHOR_ID))
             .where(BOOKS.ID.eq(id.value))
             .orderBy(BOOKS.ID, AUTHORS.ID)
             .fetch()
-        if (records.isEmpty()) return null
-
-        val first = records.first()
-        val authors = records.mapNotNull { record ->
-            val authorId = record.get(AUTHORS.ID) ?: return@mapNotNull null
-            val name = record.get(AUTHORS.NAME) ?: return@mapNotNull null
-            val birthDate = record.get(AUTHORS.BIRTH_DATE) ?: return@mapNotNull null
-            AuthorView(authorId, name, birthDate)
-        }
 
         return BookView(
-            id = first.get(BOOKS.ID)!!,
-            title = first.get(BOOKS.TITLE)!!,
-            price = first.get(BOOKS.PRICE) ?: BigDecimal.ZERO,
-            publishStatus = first.get(BOOKS.PUBLISH_STATUS)!!,
-            authors = authors
+            id = records.first().get(BOOKS.ID)!!,
+            title = records.first().get(BOOKS.TITLE)!!,
+            price = records.first().get(BOOKS.PRICE)!!,
+            publishStatus = records.first().get(BOOKS.PUBLISH_STATUS)!!,
+            authors = records.mapNotNull { row ->
+                AuthorView(
+                    id = row.get(AUTHORS.ID)!!,
+                    name = row.get(AUTHORS.NAME)!!,
+                    birthDate = row.get(AUTHORS.BIRTH_DATE)!!,
+                )
+            }
         )
+
     }
 
-    override fun findByAuthorIds(authorIds: Collection<AuthorId>): List<BookView> {
-        if (authorIds.isEmpty()) return emptyList()
-
-        val filterAuthors = BOOK_AUTHORS.`as`("filter_authors")
-        val allAuthors = BOOK_AUTHORS.`as`("all_authors")
-        val authorTable = AUTHORS.`as`("authors")
+    override fun findByAuthorName(authorName: AuthorName): List<BookView> {
 
         val records = dsl.select(
             BOOKS.ID,
             BOOKS.TITLE,
             BOOKS.PRICE,
             BOOKS.PUBLISH_STATUS,
-            authorTable.ID,
-            authorTable.NAME,
-            authorTable.BIRTH_DATE,
+            AUTHORS.ID,
+            AUTHORS.NAME,
+            AUTHORS.BIRTH_DATE,
         )
             .from(BOOKS)
-            .leftJoin(allAuthors).on(allAuthors.BOOK_ID.eq(BOOKS.ID))
-            .leftJoin(authorTable).on(authorTable.ID.eq(allAuthors.AUTHOR_ID))
-            .whereExists(
-                dsl.selectOne()
-                    .from(filterAuthors)
-                    .where(
-                        filterAuthors.BOOK_ID.eq(BOOKS.ID)
-                            .and(filterAuthors.AUTHOR_ID.`in`(authorIds.map { it.value }))
-                    )
-            )
-            .orderBy(BOOKS.ID, authorTable.ID)
+            .join(BOOK_AUTHORS).on(BOOK_AUTHORS.BOOK_ID.eq(BOOKS.ID))
+            .join(AUTHORS).on(AUTHORS.ID.eq(BOOK_AUTHORS.AUTHOR_ID))
+            .where(AUTHORS.NAME.eq(authorName.value))
             .fetch()
-        if (records.isEmpty()) return emptyList()
 
-        return records
-            .groupBy { it.get(BOOKS.ID)!! }
-            .map { (bookId, rows) ->
-                val first = rows.first()
-                val authorList = rows.mapNotNull { row ->
-                    val authorId = row.get(authorTable.ID) ?: return@mapNotNull null
-                    val name = row.get(authorTable.NAME) ?: return@mapNotNull null
-                    val birthDate = row.get(authorTable.BIRTH_DATE) ?: return@mapNotNull null
-                    AuthorView(authorId, name, birthDate)
-                }
-                BookView(
-                    id = bookId,
-                    title = first.get(BOOKS.TITLE)!!,
-                    price = first.get(BOOKS.PRICE) ?: BigDecimal.ZERO,
-                    publishStatus = first.get(BOOKS.PUBLISH_STATUS)!!,
-                    authors = authorList,
-                )
-            }
+        return records.groupBy { it.get(BOOKS.ID)!! }.map { (_, rows) ->
+            BookView(
+                id = rows.first().get(BOOKS.ID)!!,
+                title = rows.first().get(BOOKS.TITLE)!!,
+                price = rows.first().get(BOOKS.PRICE)!!,
+                publishStatus = rows.first().get(BOOKS.PUBLISH_STATUS)!!,
+                authors = rows.mapNotNull { row ->
+                    AuthorView(
+                        id = row.get(AUTHORS.ID)!!,
+                        name = row.get(AUTHORS.NAME)!!,
+                        birthDate = row.get(AUTHORS.BIRTH_DATE)!!,
+                    )})
+        }
     }
 }

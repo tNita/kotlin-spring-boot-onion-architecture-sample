@@ -3,7 +3,7 @@ package com.example.bookmanager.presentation.book
 import com.example.bookmanager.application.RegisterBookUseCase
 import com.example.bookmanager.application.UpdateBookUseCase
 import com.example.bookmanager.domain.AuthorId
-import com.example.bookmanager.domain.Id
+import com.example.bookmanager.shared.Id
 import com.example.bookmanager.domain.PublishStatus
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.DecimalMin

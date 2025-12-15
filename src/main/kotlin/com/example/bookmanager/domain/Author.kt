@@ -1,5 +1,7 @@
 package com.example.bookmanager.domain
 
+import com.example.bookmanager.shared.Id
+
 /**
  * 著者エンティティ。
  */

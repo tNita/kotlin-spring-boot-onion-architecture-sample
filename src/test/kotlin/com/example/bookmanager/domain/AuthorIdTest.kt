@@ -1,5 +1,6 @@
 package com.example.bookmanager.domain
 
+import com.example.bookmanager.shared.Id
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
