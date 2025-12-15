@@ -3,6 +3,7 @@ package com.example.bookmanager.presentation.exception
 import com.example.bookmanager.application.ApplicationErrorCode
 import com.example.bookmanager.application.ApplicationException
 import com.example.bookmanager.application.ApplicationErrorType
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,6 +13,7 @@ import org.springframework.web.context.request.WebRequest
 import org.slf4j.LoggerFactory
 
 @RestControllerAdvice
+@Hidden
 class RestExceptionHandler {
     private val logger = LoggerFactory.getLogger(RestExceptionHandler::class.java)
 

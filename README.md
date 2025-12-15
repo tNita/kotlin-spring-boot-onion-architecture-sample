@@ -21,3 +21,4 @@
 - テスト: `./gradlew test`
 - DB 起動: `docker compose up -d postgres`
 - アプリ起動: `./gradlew bootRun`（DB が起動していること）
+- Swagger UI: アプリ起動後、`http://localhost:8080/swagger-ui/index.html` にアクセス
